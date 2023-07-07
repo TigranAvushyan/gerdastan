@@ -1,13 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { Person, Prisma } from '@prisma/client';
+import { listToTree } from '../../helpers/listToTree/listToTree';
 
 @Injectable()
 export class PersonService {
   constructor(private prisma: PrismaService) {}
 
   async person(personId: number) {
-    return this.prisma.person.findUnique({ where: { id: personId } });
+    return this.prisma.person.findUnique({
+      where: { id: personId },
+    });
+  }
+
+  async deletePerson(personId: number) {
+    return this.prisma.person.delete({
+      where: { id: personId },
+    });
+  }
+
+  async personTree() {
+    const list = await this.prisma.person.findMany({
+      include: {
+        children: true,
+      },
+    });
+    return listToTree<Person>(list);
   }
 
   async persons(params: {
@@ -30,20 +48,20 @@ export class PersonService {
     });
   }
 
-  // async addChildren(personId: number, children: Prisma.PersonCreateInput) {
-  //   return this.prisma.person.update({
-  //     where: { id: personId },
-  //     data: {
-  //       children: {
-  //         upsert: children,
-  //       },
-  //     },
-  //   });
-  // }
-
   async createPerson(data: Prisma.PersonCreateInput): Promise<Person> {
     return this.prisma.person.create({
       data,
+    });
+  }
+
+  async updatePerson(id: number, data: Prisma.PersonUpdateInput) {
+    return this.prisma.person.update({ where: { id }, data });
+  }
+
+  async addImage(id: number, images: string[]) {
+    return this.prisma.person.update({
+      where: { id },
+      data: { images: { push: images } },
     });
   }
 }

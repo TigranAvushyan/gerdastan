@@ -11,10 +11,22 @@ datasource db {
 }
 
 model Person {
-  id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  children  Person[] @relation("ChildrenUser")
-  parent    Person?  @relation("ChildrenUser", fields: [parentId], references: [id])
-  parentId  Int?
+  id              Int       @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  gender          Gender?
+  about           String?
+  birthday        DateTime?
+  images          String[]
+  children        Person[]  @relation("ChildrenUser")
+  parent          Person?   @relation("ChildrenUser", fields: [parentId], references: [id])
+  parentId        Int?
+  soctialNetworks String[]
+  phone           String[]
+  address         String[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
