@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { PersonTree } from '@feature/person/ui/PersonTree.tsx';
+import { PersonTree } from '@feature/person';
 
-export const RootApp: FC = () => {
+export const App: FC = () => {
   return <PersonTree />;
 };
