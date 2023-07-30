@@ -4,6 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
+import { STATIC_ASSETS_PATH } from './consts/staticAssetsPath';
 
 function createSwagger(app: INestApplication) {
   const options = new DocumentBuilder().build();
@@ -14,7 +15,7 @@ function createSwagger(app: INestApplication) {
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(path.join(__dirname, '../uploads'));
+  app.useStaticAssets(path.join(__dirname, `../${STATIC_ASSETS_PATH}`));
 
   app.setGlobalPrefix('api');
 

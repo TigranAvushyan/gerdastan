@@ -1,5 +1,5 @@
 export function listToTree<
-  T extends { id: number; parentId: null | number; children?: T[] },
+  T extends { id: number; firstName: string; parentId: null | number; children?: T[] },
 >(list: T[]): T[] {
   const map: any = {};
   let node;

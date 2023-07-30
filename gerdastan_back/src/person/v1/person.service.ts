@@ -21,11 +21,16 @@ export class PersonService {
 
   async personTree() {
     const list = await this.prisma.person.findMany({
-      include: {
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
         children: true,
+        gender: true,
+        parentId: true,
       },
     });
-    return listToTree<Person>(list);
+    return listToTree<any>(list);
   }
 
   async persons(params: {

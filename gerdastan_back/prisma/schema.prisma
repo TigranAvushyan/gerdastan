@@ -16,7 +16,8 @@ model Person {
   lastName        String
   gender          Gender?
   about           String?
-  birthday        DateTime?
+  birthday        DateTime? @db.Date
+  died            DateTime? @db.Date
   images          String[]
   children        Person[]  @relation("ChildrenUser")
   parent          Person?   @relation("ChildrenUser", fields: [parentId], references: [id])

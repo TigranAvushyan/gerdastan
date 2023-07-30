@@ -34,6 +34,7 @@ export class PersonController {
   async getPerson(@Param('id', ParseIntPipe) id: number) {
     return this.personService.person(id);
   }
+
   @Delete(':id')
   async deletePerson(@Param('id', ParseIntPipe) id: number) {
     return this.personService.deletePerson(id);
@@ -50,12 +51,7 @@ export class PersonController {
       storage: diskStorage({
         destination: './uploads',
         filename(req, file, callback) {
-          callback(
-            null,
-            `${Date.now()}${Math.floor(Math.random() * 100)}-${
-              file.originalname
-            }`,
-          );
+          callback(null, `${Date.now()}${Math.floor(Math.random() * 100)}-${file.originalname}`);
         },
       }),
     }),
@@ -69,10 +65,7 @@ export class PersonController {
   }
 
   @Patch(':id')
-  updatePerson(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() person: Prisma.PersonUpdateInput,
-  ) {
+  updatePerson(@Param('id', ParseIntPipe) id: number, @Body() person: Prisma.PersonUpdateInput) {
     return this.personService.updatePerson(id, person);
   }
 }
