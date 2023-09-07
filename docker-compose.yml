@@ -6,10 +6,36 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gerdastan
     ports:
       - '5432:5432'
-    volumes
+    volumes:
       - db:/var/lib/postgresql/data
+  api:
+    container_name: gerdastan-api
+    build:
+      context: ./gerdastan_back
+      target: production
+      dockerfile: Dockerfile
+    image: gerdastan-api
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/gerdastan
+    links:
+      - db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - webnet
+
 volumes:
   db:
     driver: local
+
+networks:
+  webnet:

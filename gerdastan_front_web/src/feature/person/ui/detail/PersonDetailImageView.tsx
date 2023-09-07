@@ -4,12 +4,14 @@ import { useToggle } from '@shared/hooks/useToggle/useToggle.ts';
 import { getFilePath } from '@shared/server/model/getFilePath.ts';
 import { PlusOutlined } from '@ant-design/icons';
 import { useIsPeronEditMode } from '@feature/person/hooks/useIsPeronEditMode.ts';
+import { BASE_URL } from '@shared/server';
 
 interface Props {
   images: string[];
+  personId: number;
 }
 
-export const PersonDetailImageView: FC<Props> = ({ images }) => {
+export const PersonDetailImageView: FC<Props> = ({ images, personId }) => {
   const { active, setActive, setTrue } = useToggle();
   const isEditMode = useIsPeronEditMode();
   return (
@@ -17,7 +19,12 @@ export const PersonDetailImageView: FC<Props> = ({ images }) => {
       <Row>
         {isEditMode && (
           <Col>
-            <Upload name="image" listType="picture-card" showUploadList={false}>
+            <Upload
+              action={`${BASE_URL}/api/v1/person/${personId}/image`}
+              name="image"
+              listType="picture-card"
+              showUploadList={false}
+            >
               <div>
                 {<PlusOutlined />}
                 <div style={{ marginTop: 8 }}>Upload</div>

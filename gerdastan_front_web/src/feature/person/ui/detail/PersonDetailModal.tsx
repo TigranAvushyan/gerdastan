@@ -32,7 +32,7 @@ export const PersonDetailModal: FC = () => {
       onCancel={closeModal}
     >
       <PersonDetailFormProvider person={person}>
-        <PersonDetailImageView images={person.images} />
+        <PersonDetailImageView personId={person.id} images={person.images} />
         <PersonDetailDate />
         <PersonDetailAbout />
         <PersonDetailFooter />

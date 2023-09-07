@@ -16,7 +16,10 @@ export const PersonTreeNode = (node: NodeProps<IPersonNodeData>) => {
       {node.data.parentId !== null && (
         <Handle isConnectable={false} type={'target'} position={Position.Top} />
       )}
-      <div>{node.data.label}</div>
+      <div style={{ textAlign: 'center' }}>
+        <div>{node.data.firstName}</div>
+        <div>{node.data.lastName}</div>
+      </div>
       {!!node.data.children?.length && (
         <Handle isConnectable={false} type={'source'} position={Position.Bottom} />
       )}
