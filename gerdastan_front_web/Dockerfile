@@ -4,9 +4,9 @@ WORKDIR /frontend
 
 COPY ./ ./
 
-RUN npm install --silent
+RUN npm install
 
-CMD ["npm", "run", "build"]
+RUN npm run build
 
 FROM nginx:1.25.2
 
