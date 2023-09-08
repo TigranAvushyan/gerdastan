@@ -1,13 +1,11 @@
 FROM node:18.12.1 AS builder
 
 WORKDIR /frontend
-COPY package.json .
-RUN npm install
 
-COPY . .
+COPY ./ ./
 
-CMD ["npm", "run", "build"]
-
+RUN npm install --silent
+RUN npm run build
 
 FROM nginx:1.25.2
 
