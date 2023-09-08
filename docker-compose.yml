@@ -1,41 +1,28 @@
-version: '3.8'
+version: '3.7'
 services:
-  db:
-    image: postgres:14.1-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=gerdastan
-    ports:
-      - '5432:5432'
-    volumes:
-      - db:/var/lib/postgresql/data
-  api:
-    container_name: gerdastan-api
+  nest-api:
+    container_name: nest-api
     build:
-      context: ./gerdastan_back
-      target: production
+      context: .
       dockerfile: Dockerfile
-    image: gerdastan-api
-    depends_on:
-      - db
     ports:
       - 3000:3000
-    environment:
-      NODE_ENV: production
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/gerdastan
-    links:
-      - db
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:12
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    networks:
-      - webnet
+      - postgres:/var/lib/postgresql/data
 
 volumes:
-  db:
-    driver: local
-
-networks:
-  webnet:
+  postgres:
+    name: nest-db
