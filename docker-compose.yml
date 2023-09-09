@@ -11,7 +11,7 @@ services:
       - VITE_SERVER_URL:backend
 
   backend:
-    container_name: nest-api
+    container_name: backend
     build: ./gerdastan_back
     ports:
       - 3000:3000
