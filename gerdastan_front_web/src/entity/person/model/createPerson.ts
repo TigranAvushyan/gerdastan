@@ -3,6 +3,7 @@ import { createEvent, forward, sample } from 'effector';
 import { createForm } from 'effector-forms';
 import { addPersonFx, fetchPersonTreeFx } from '@entity/person/model/personStore.ts';
 import { IAddPerson } from '@entity/person/types/personTypes.ts';
+import { personDetailEditMode, personDetailModal } from '@feature/person/model/personDetail.ts';
 
 export const createPersonModal = createModal<number | null>();
 export const openCreatePersonModal = createEvent<number | null>();
@@ -15,9 +16,9 @@ sample({
 export const addPersonForm = createForm<IAddPerson>({
   fields: {
     parentId: { init: null },
-    firstName: { init: '', rules: [{ name: 'required', validator: (value) => Boolean(value) }] },
-    lastName: { init: '', rules: [{ name: 'required', validator: (value) => Boolean(value) }] },
-    gender: { init: null, rules: [{ name: 'required', validator: (value) => Boolean(value) }] },
+    firstName: { init: '', rules: [{ name: 'required', validator: (value) => !!value }] },
+    lastName: { init: '', rules: [{ name: 'required', validator: (value) => !!value }] },
+    gender: { init: null, rules: [{ name: 'required', validator: (value) => !!value }] },
   },
   validateOn: ['change'],
 });
@@ -29,7 +30,12 @@ sample({
 
 sample({
   clock: addPersonFx.doneData,
-  target: [createPersonModal.clearDataAndClose, fetchPersonTreeFx],
+  target: [
+    createPersonModal.clearDataAndClose,
+    fetchPersonTreeFx,
+    personDetailModal.clearDataAndClose,
+    personDetailEditMode.setFalse,
+  ],
 });
 
 forward({

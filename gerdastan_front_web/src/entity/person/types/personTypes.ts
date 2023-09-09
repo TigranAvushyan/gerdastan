@@ -45,8 +45,16 @@ export interface IPersonDetail extends IPerson {
   died: string | null;
   images: string[];
   socialNetworks: string[];
+  wifeOrHusband: string | null;
   phone: string[];
   address: string[];
 }
 
 export type PersonDetailFormType = ReturnType<typeof createPersonForm>;
+
+export interface IChangePersonName {
+  firstName: string;
+  lastName: string;
+  gender: PersonGender;
+  id: number;
+}

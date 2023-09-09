@@ -22,6 +22,7 @@ export const createModal = <T>() => {
     clock: setDataAndOpen,
     target: [setData, open],
   });
+
   sample({
     clock: clearDataAndClose,
     target: [close, clearData],

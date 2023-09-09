@@ -7,11 +7,7 @@ import styles from './create-person.module.css';
 import cn from 'classnames';
 import { useForm } from 'effector-forms';
 import { withPreventDefault } from '@shared/helpers/withPreventDefault.ts';
-
-const options = [
-  { value: 'MALE', label: 'Տղա' },
-  { value: 'FEMALE', label: 'Աղջիկ' },
-];
+import { GENDER_OPTIONS } from '@feature/person/consts/personConsts.ts';
 
 export const CreatePersonModal: FC = () => {
   const { $isOpen, close } = useUnit(createPersonModal);
@@ -27,7 +23,7 @@ export const CreatePersonModal: FC = () => {
       title={'Ընտանիքի նոր անդամ'}
       okText={'Ողարկել'}
       cancelText={'Չեղարկել'}
-      okButtonProps={{ disabled: isDirty && !isValid }}
+      okButtonProps={{ disabled: !(isDirty && isValid) }}
       open={$isOpen}
       onOk={withPreventDefault(submit)}
       onCancel={closeModal}
@@ -49,7 +45,7 @@ export const CreatePersonModal: FC = () => {
         value={fields.gender?.value}
         placeholder={'Սեռ'}
         onChange={fields.gender.onChange}
-        options={options}
+        options={GENDER_OPTIONS}
       />
     </Modal>
   );

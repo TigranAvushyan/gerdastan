@@ -1,9 +1,10 @@
 import { IPersonDetail, PersonDetailFormType } from '@entity/person/types/personTypes.ts';
 import { AnyFormValues, createForm, FormFieldConfigs } from 'effector-forms';
-import { createEffect, sample } from 'effector';
+import { createEffect, createEvent, sample } from 'effector';
 import { patchPerson, postPersonImage } from '@entity/person/api/personApi.ts';
 import { createContext } from 'react';
 import { personDetailEditMode, personDetailModal } from '@feature/person/model/personDetail.ts';
+import { changePersonName } from '@entity/person/model/personStore.ts';
 
 const convertToForm = <V extends AnyFormValues>(person?: IPersonDetail): FormFieldConfigs<V> => {
   const obj: any = {};
@@ -31,17 +32,30 @@ export const createPersonForm = (person?: IPersonDetail) => {
   });
 
   const updatePersonFx = createEffect(patchPerson);
+
   sample({
     clock: form.formValidated,
     fn: ({ id, ...body }) => {
       return { id, body };
     },
-    target: updatePersonFx,
+    target: [updatePersonFx, personDetailModal.clearDataAndClose, personDetailEditMode.setFalse],
   });
 
   sample({
     clock: updatePersonFx.doneData,
-    target: [form.reset, personDetailModal.clearDataAndClose, personDetailEditMode.setFalse],
+    target: form.reset,
+  });
+
+  sample({
+    source: form.$values,
+    clock: updatePersonFx.doneData,
+    fn: (form, clock) => ({
+      id: form.id,
+      firstName: clock.firstName,
+      lastName: clock.lastName,
+      gender: clock.gender,
+    }),
+    target: changePersonName,
   });
 
   return {

@@ -17,12 +17,16 @@ export const Date = memo<Props>(({ isEditMode, onChange, value, label }) => {
     [onChange],
   );
   return (
-    <Row gutter={12}>
-      <Col span={6}>
+    <Row gutter={24}>
+      <Col span={10}>
         <span>{label}</span>
       </Col>
-      <Col span={12}>
-        {isEditMode ? <DatePicker defaultValue={getDate(value)} onChange={change} /> : value}
+      <Col span={14}>
+        {isEditMode ? (
+          <DatePicker placeholder={'ամսաթիվ'} defaultValue={getDate(value)} onChange={change} />
+        ) : (
+          value
+        )}
       </Col>
     </Row>
   );

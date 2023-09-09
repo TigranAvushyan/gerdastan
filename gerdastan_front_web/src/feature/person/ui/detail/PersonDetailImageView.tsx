@@ -1,10 +1,12 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Col, Image, Row, Upload } from 'antd';
-import { useToggle } from '@shared/hooks/useToggle/useToggle.ts';
 import { getFilePath } from '@shared/server/model/getFilePath.ts';
 import { PlusOutlined } from '@ant-design/icons';
 import { useIsPeronEditMode } from '@feature/person/hooks/useIsPeronEditMode.ts';
 import { BASE_URL } from '@shared/server';
+import { getBase64 } from '@shared/helpers/getBase64.ts';
+import { UploadChangeParam } from 'antd/es/upload/interface';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   images: string[];
@@ -12,45 +14,52 @@ interface Props {
 }
 
 export const PersonDetailImageView: FC<Props> = ({ images, personId }) => {
-  const { active, setActive, setTrue } = useToggle();
   const isEditMode = useIsPeronEditMode();
+  const [newImages, setNewImages] = useState<string[]>([]);
+
+  const addNewLocalImage = async ({ file }: UploadChangeParam) => {
+    if (!file.url && !file.preview) {
+      const res = await getBase64(file.originFileObj as RcFile);
+      setNewImages((p) => {
+        const set = new Set(p);
+        set.add(res);
+        return [...set];
+      });
+    }
+  };
+
   return (
     <>
-      <Row>
+      <Row gutter={[5, 5]}>
         {isEditMode && (
           <Col>
             <Upload
               action={`${BASE_URL}/api/v1/person/${personId}/image`}
+              onChange={addNewLocalImage}
               name="image"
               listType="picture-card"
               showUploadList={false}
             >
               <div>
                 {<PlusOutlined />}
-                <div style={{ marginTop: 8 }}>Upload</div>
+                <div style={{ marginTop: 8 }}>Բեռնել լուսանկար</div>
               </div>
             </Upload>
           </Col>
         )}
-        {images[0] && (
-          <Col>
-            <Image
-              preview={{ visible: false }}
-              height={102}
-              style={{ borderRadius: 8 }}
-              src={getFilePath(images[0])}
-              onClick={setTrue}
-            />
-          </Col>
-        )}
-      </Row>
-      <div style={{ display: 'none' }}>
-        <Image.PreviewGroup preview={{ visible: active, onVisibleChange: setActive }}>
+        <Image.PreviewGroup>
           {images.map((i, index) => (
-            <Image key={index} src={getFilePath(i)} />
+            <Col key={index}>
+              <Image height={102} style={{ borderRadius: 8 }} src={getFilePath(i)} />
+            </Col>
+          ))}
+          {newImages.map((i, index) => (
+            <Col key={index}>
+              <Image height={102} style={{ borderRadius: 8 }} src={i} />
+            </Col>
           ))}
         </Image.PreviewGroup>
-      </div>
+      </Row>
     </>
   );
 };

@@ -8,7 +8,11 @@ import { deletePersonFx } from '@entity/person/model/personStore.ts';
 import { useStore } from 'effector-react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-export const PersonDetailFooter: FC = () => {
+type Props = {
+  canDelete: boolean;
+};
+
+export const PersonDetailFooter: FC<Props> = ({ canDelete }) => {
   const formContext = useContext(PersonDetailFormContext);
   const isEditMode = useIsPeronEditMode();
   const { submit, isValid, isDirty, fields } = useForm(formContext.form);
@@ -20,6 +24,7 @@ export const PersonDetailFooter: FC = () => {
   };
 
   if (!(isEditMode && fields.id.value)) return null;
+
   return (
     <Space>
       <Button onClick={createChildren}>Նոր սերունդ</Button>
@@ -30,9 +35,11 @@ export const PersonDetailFooter: FC = () => {
         onConfirm={() => deletePersonFx(fields.id.value)}
         icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
       >
-        <Button danger loading={deleteLoading}>
-          Ջնջել
-        </Button>
+        {canDelete && (
+          <Button danger loading={deleteLoading}>
+            Ջնջել
+          </Button>
+        )}
       </Popconfirm>
 
       <Button

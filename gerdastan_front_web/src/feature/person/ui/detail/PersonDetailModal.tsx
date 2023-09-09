@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useUnit } from 'effector-react';
+import { useStore, useUnit } from 'effector-react';
 import { personDetailEditMode, personDetailModal } from '@feature/person/model/personDetail.ts';
 import { Modal } from 'antd';
 import { getFullName } from '@entity/person/helpers/getFullName.ts';
@@ -9,6 +9,10 @@ import { EditOutlined } from '@ant-design/icons';
 import { PersonDetailFormProvider } from '@entity/person/ui/PersonDetailFormProvider.tsx';
 import { PersonDetailAbout } from '@feature/person/ui/detail/PersonDetailAbout.tsx';
 import { PersonDetailFooter } from '@feature/person/ui/detail/PersonDetailFooter.tsx';
+import styles from './person-detail.module.css';
+import { PersonDetailWifeOrHusband } from '@feature/person/ui/detail/PersonDetailWifeOrHusband.tsx';
+import { PersonDetailName } from '@feature/person/ui/detail/PersonDetailName.tsx';
+import { $persons } from '@entity/person/model/personStore.ts';
 
 export const PersonDetailModal: FC = () => {
   const { $data: person, close, $isOpen } = useUnit(personDetailModal);
@@ -16,6 +20,7 @@ export const PersonDetailModal: FC = () => {
     close();
     personDetailEditMode.setFalse();
   };
+  const persons = useStore($persons);
 
   if (!person) return null;
 
@@ -32,10 +37,16 @@ export const PersonDetailModal: FC = () => {
       onCancel={closeModal}
     >
       <PersonDetailFormProvider person={person}>
+        <PersonDetailName />
         <PersonDetailImageView personId={person.id} images={person.images} />
         <PersonDetailDate />
+        <PersonDetailWifeOrHusband />
         <PersonDetailAbout />
-        <PersonDetailFooter />
+        <div className={styles.widget}>
+          <PersonDetailFooter
+            canDelete={!persons.find((i) => i.id === person.id)?.children?.length}
+          />
+        </div>
       </PersonDetailFormProvider>
     </Modal>
   );
