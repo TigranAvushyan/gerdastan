@@ -1,6 +1,6 @@
 import { IPersonDetail, PersonDetailFormType } from '@entity/person/types/personTypes.ts';
 import { AnyFormValues, createForm, FormFieldConfigs } from 'effector-forms';
-import { createEffect, createEvent, sample } from 'effector';
+import { createEffect, sample } from 'effector';
 import { patchPerson, postPersonImage } from '@entity/person/api/personApi.ts';
 import { createContext } from 'react';
 import { personDetailEditMode, personDetailModal } from '@feature/person/model/personDetail.ts';

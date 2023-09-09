@@ -18,7 +18,7 @@ model Person {
   about           String?
   birthday        String?
   died            String?
-  wifeOrHusbent   String[]
+  wifeOrHusband   String?
   images          String[]
   children        Person[] @relation("ChildrenUser")
   parent          Person?  @relation("ChildrenUser", fields: [parentId], references: [id])
