@@ -19,7 +19,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/gerdastan
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
 
   postgres:
     image: postgres:14
@@ -28,7 +28,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=gerdastan
+      - POSTGRES_DB=postgres
       - POSTGRES_PORT=5432
     ports:
       - 5432:5432
