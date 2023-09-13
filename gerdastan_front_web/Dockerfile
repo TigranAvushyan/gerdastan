@@ -15,4 +15,6 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 COPY --from=builder /frontend/dist .
+
+
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

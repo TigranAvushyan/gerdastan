@@ -1,3 +1,4 @@
+# docker-compose
 version: '2.20.3'
 services:
   frontend:
@@ -8,7 +9,7 @@ services:
     depends_on:
       - backend
     environment:
-      - VITE_SERVER_URL:backend
+      - VITE_SERVER_URL=backend
 
   backend:
     container_name: backend
@@ -17,15 +18,18 @@ services:
       - 3000:3000
     depends_on:
       - postgres
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/gerdastan
 
   postgres:
     image: postgres:14
     container_name: nest-db
     restart: always
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gerdastan
+      - POSTGRES_PORT=5432
     ports:
       - 5432:5432
     volumes:
