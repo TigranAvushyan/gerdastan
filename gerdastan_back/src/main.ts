@@ -5,6 +5,7 @@ import * as path from 'path';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { STATIC_ASSETS_PATH } from './consts/staticAssetsPath';
+import * as process from 'process';
 
 function createSwagger(app: INestApplication) {
   const options = new DocumentBuilder().build();
