@@ -11,6 +11,7 @@ RUN npm install
 
 COPY . .
 
+CMD ["npm", "run", "migrate"]
 RUN npm run build
 
 FROM node:14
