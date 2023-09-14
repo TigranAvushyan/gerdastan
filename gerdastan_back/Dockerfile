@@ -8,10 +8,10 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 RUN npm install
-
+RUN npm run migrate
 COPY . .
 
-CMD ["npm", "run", "migrate"]
+
 RUN npm run build
 
 FROM node:14
