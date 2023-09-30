@@ -43,6 +43,10 @@ export class PersonController {
   async createPerson(@Body() personData: PersonEntity) {
     return await this.personService.createPerson(personData);
   }
+  @Post('/create-parent/:id')
+  async createParent(@Param('id', ParseIntPipe) id: string, @Body() personData: PersonEntity) {
+    return await this.personService.createParent(id, personData);
+  }
 
   @Post(':id/image')
   @UseInterceptors(

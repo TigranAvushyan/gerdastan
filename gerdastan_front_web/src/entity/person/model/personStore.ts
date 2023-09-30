@@ -4,7 +4,7 @@ import {
   deletePerson,
   getPerson,
   getPersonTree,
-  patchPerson,
+  postCreateParent,
   postPerson,
 } from '../api/personApi.ts';
 import { createGate } from 'effector-react';
@@ -21,8 +21,7 @@ export const addPersonFx = createEffect(postPerson);
 
 export const addPersonFromChildrenFx = createEffect(
   async ({ childrenId, ...form }: IAddPersonFromChildren) => {
-    const newPerson = await postPerson({ ...form, parentId: null });
-    await patchPerson({ id: childrenId || 0, body: { parentId: newPerson.id } });
+    return await postCreateParent(childrenId || 0, form);
   },
 );
 

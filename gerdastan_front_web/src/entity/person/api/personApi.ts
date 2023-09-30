@@ -9,6 +9,10 @@ export const postPerson = async (body: Omit<IPerson, 'id'>) => {
   const res = await http.post<IPerson>(urls.person(), body);
   return res.data;
 };
+export const postCreateParent = async (id: number, body: Omit<IPerson, 'id'>) => {
+  const res = await http.post<IPerson>(urls.createParent(id), body);
+  return res.data;
+};
 
 export const deletePerson = async (id: number) => {
   const res = await http.delete(urls.personId(id));

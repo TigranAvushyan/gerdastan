@@ -7,7 +7,7 @@ export enum PersonGender {
 export interface IPerson {
   id: number;
   children?: IPerson[];
-  parentId: number | null;
+  parentId?: number | null;
   firstName: string;
   lastName: string;
   gender: PersonGender | null;

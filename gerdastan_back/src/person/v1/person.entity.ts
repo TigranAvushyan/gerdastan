@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { Gender } from '../../enums/Gender';
 
-@Tree('nested-set')
-@Entity({ name: 'PersonEntity1' })
+@Tree('materialized-path')
+@Entity()
 export abstract class PersonEntity {
   @PrimaryGeneratedColumn({ unsigned: true })
   id: string;

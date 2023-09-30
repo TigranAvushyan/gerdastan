@@ -31,36 +31,44 @@ export class PersonService {
     return this.repo.save(data);
   }
 
+  async createParent(childrenId: string, data: PersonEntity) {
+    const children = await this.repo.findOneBy({ id: childrenId });
+
+    const parent = this.repo.create(data);
+    parent.parentId = null;
+    const p = await this.repo.save(parent);
+    children.parent = p;
+    children.parentId = p.id;
+    return this.repo.save(children);
+  }
+
   async updatePerson(id: string, person: PersonEntity) {
-    return await this.repo.update(
-      {
-        id: id,
-      },
-      person,
-    );
+    const oldData = await this.repo.findOne({
+      where: { id },
+    });
+    return this.repo.save({
+      ...oldData,
+      ...person,
+    });
   }
 
   async addImage(id: string, files: string[]) {
     const person = await this.repo.findOneBy({ id });
     const images = person.images || [];
     images.push(...files);
-    return await this.repo.update(
-      {
-        id: id,
-      },
-      { images: images },
-    );
+    return this.repo.save({
+      ...person,
+      images: images,
+    });
   }
 
   async addVideo(id: string, files: string[]) {
     const person = await this.repo.findOneBy({ id });
     const videos = person.videos || [];
     videos.push(...files);
-    return await this.repo.update(
-      {
-        id: id,
-      },
-      { videos: videos },
-    );
+    return await this.repo.save({
+      ...person,
+      videos: videos,
+    });
   }
 }
