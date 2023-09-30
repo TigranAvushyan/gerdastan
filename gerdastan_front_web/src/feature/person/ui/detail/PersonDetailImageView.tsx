@@ -9,7 +9,7 @@ import { UploadChangeParam } from 'antd/es/upload/interface';
 import { RcFile } from 'antd/es/upload';
 
 interface Props {
-  images: string[];
+  images: string[] | null;
   personId: number;
 }
 
@@ -48,7 +48,7 @@ export const PersonDetailImageView: FC<Props> = ({ images, personId }) => {
           </Col>
         )}
         <Image.PreviewGroup>
-          {images.map((i, index) => (
+          {images?.map((i, index) => (
             <Col key={index}>
               <Image height={102} style={{ borderRadius: 8 }} src={getFilePath(i)} />
             </Col>
