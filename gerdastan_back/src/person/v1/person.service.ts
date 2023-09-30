@@ -1,72 +1,66 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Person, Prisma } from '@prisma/client';
-import { listToTree } from '../../helpers/listToTree/listToTree';
+import { TreeRepository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PersonEntity } from './person.entity';
 
 @Injectable()
 export class PersonService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(PersonEntity)
+    private repo: TreeRepository<PersonEntity>,
+  ) {}
 
-  async person(personId: number) {
-    return this.prisma.person.findUnique({
-      where: { id: personId },
-    });
+  async person(personId: string) {
+    return this.repo.findOneBy({ id: personId });
   }
 
-  async deletePerson(personId: number) {
-    return this.prisma.person.delete({
-      where: { id: personId },
-    });
+  async deletePerson(personId: string) {
+    return this.repo.delete({ id: personId });
   }
 
   async personTree() {
-    const list = await this.prisma.person.findMany({
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        children: true,
-        gender: true,
-        parentId: true,
+    return this.repo.findTrees();
+  }
+
+  async persons() {
+    return this.repo.find();
+  }
+
+  async createPerson(data: PersonEntity) {
+    data.parent = await this.repo.findOneBy({ id: data.parentId });
+    return this.repo.save(data);
+  }
+
+  async updatePerson(id: string, person: PersonEntity) {
+    return await this.repo.update(
+      {
+        id: id,
       },
-    });
-    return listToTree<any>(list);
+      person,
+    );
   }
 
-  async persons(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.PersonWhereUniqueInput;
-    where?: Prisma.PersonWhereInput;
-    orderBy?: Prisma.PersonOrderByWithRelationInput;
-  }): Promise<Person[]> {
-    const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.person.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-      include: {
-        children: true,
+  async addImage(id: string, files: string[]) {
+    const person = await this.repo.findOneBy({ id });
+    const images = person.images || [];
+    images.push(...files);
+    return await this.repo.update(
+      {
+        id: id,
       },
-    });
+      { images: images },
+    );
   }
 
-  async createPerson(data: Prisma.PersonCreateInput): Promise<Person> {
-    return this.prisma.person.create({
-      data,
-    });
-  }
-
-  async updatePerson(id: number, data: Prisma.PersonUpdateInput) {
-    return this.prisma.person.update({ where: { id }, data });
-  }
-
-  async addImage(id: number, images: string[]) {
-    return this.prisma.person.update({
-      where: { id },
-      data: { images: { push: images } },
-    });
+  async addVideo(id: string, files: string[]) {
+    const person = await this.repo.findOneBy({ id });
+    const videos = person.videos || [];
+    videos.push(...files);
+    return await this.repo.update(
+      {
+        id: id,
+      },
+      { videos: videos },
+    );
   }
 }

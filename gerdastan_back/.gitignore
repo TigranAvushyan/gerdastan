@@ -35,3 +35,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 ./uploads/**
 ./uploads/*
+!/src/config/write-type-orm-config.ts

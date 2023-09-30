@@ -6,7 +6,7 @@ export const getPerson = async (id: number) => {
   return res.data;
 };
 export const postPerson = async (body: Omit<IPerson, 'id'>) => {
-  const res = await http.post(urls.person(), body);
+  const res = await http.post<IPerson>(urls.person(), body);
   return res.data;
 };
 

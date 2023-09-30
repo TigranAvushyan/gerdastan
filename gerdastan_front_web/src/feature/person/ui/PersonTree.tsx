@@ -13,6 +13,7 @@ import styles from './personTree.module.css';
 import { fetchPersonTreeFx } from '@entity/person/model/personStore.ts';
 import { useStore } from 'effector-react';
 import { LoadingOutlined } from '@ant-design/icons';
+import { CreatePersonFromChildrenModal } from '@feature/person/ui/create-person/CreatePersonFromChildrenModal.tsx';
 export const PersonTree: FC = () => {
   const { tree } = usePersonTree();
 
@@ -51,6 +52,7 @@ export const PersonTree: FC = () => {
       )}
       <PersonDetailModal />
       <CreatePersonModal />
+      <CreatePersonFromChildrenModal />
     </div>
   );
 };

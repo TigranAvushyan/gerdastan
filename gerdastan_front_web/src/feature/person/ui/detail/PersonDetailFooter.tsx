@@ -7,6 +7,7 @@ import { openCreatePersonModal } from '@entity/person/model/createPerson.ts';
 import { deletePersonFx } from '@entity/person/model/personStore.ts';
 import { useStore } from 'effector-react';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { openCreatePersonFromChildrenModal } from '@entity/person/model/createPersonFromChildren.ts';
 
 type Props = {
   canDelete: boolean;
@@ -23,11 +24,18 @@ export const PersonDetailFooter: FC<Props> = ({ canDelete }) => {
     openCreatePersonModal(fields.id?.value || null);
   };
 
+  const createChildrenFromChildren = () => {
+    openCreatePersonFromChildrenModal(fields.id?.value || null);
+  };
+
   if (!(isEditMode && fields.id.value)) return null;
 
   return (
     <Space>
-      <Button onClick={createChildren}>Նոր սերունդ</Button>
+      <Button onClick={createChildren}>Երեխա</Button>
+      {fields.parentId?.value === null && (
+        <Button onClick={createChildrenFromChildren}>Ծնող</Button>
+      )}
       <Popconfirm
         title={`Ջնջե՞լ ամբողջ ինֆորմաոիան ${fields.firstName?.value}ի մասին`}
         okText={'Այո'}

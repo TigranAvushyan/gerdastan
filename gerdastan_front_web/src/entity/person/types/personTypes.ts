@@ -19,6 +19,12 @@ export interface IAddPerson {
   parentId: number | null;
   gender: PersonGender | null;
 }
+export interface IAddPersonFromChildren {
+  firstName: string;
+  lastName: string;
+  childrenId: number | null;
+  gender: PersonGender | null;
+}
 
 export interface IPostPersonImage {
   id: number;
@@ -27,14 +33,15 @@ export interface IPostPersonImage {
 
 export interface IPatchPerson {
   id: number;
-  body: {
+  body: Partial<{
+    parentId: number | null;
     about: string | null;
     birthday: string | null;
     died: string | null;
     socialNetworks: string[];
     phone: string[];
     address: string[];
-  };
+  }>;
 }
 
 export interface IPersonDetail extends IPerson {

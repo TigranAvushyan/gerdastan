@@ -1,9 +1,15 @@
 import { createEffect, createEvent, createStore, forward, sample } from 'effector';
 import { IPerson } from '@entity/person';
-import { deletePerson, getPerson, getPersonTree, postPerson } from '../api/personApi.ts';
+import {
+  deletePerson,
+  getPerson,
+  getPersonTree,
+  patchPerson,
+  postPerson,
+} from '../api/personApi.ts';
 import { createGate } from 'effector-react';
 import { convertPersonToTree } from '@feature/person/helpers/convertPersonToTree.ts';
-import { IChangePersonName } from '@entity/person/types/personTypes.ts';
+import { IAddPersonFromChildren, IChangePersonName } from '@entity/person/types/personTypes.ts';
 
 export const PersonTreeGate = createGate('PersonTreeGate');
 
@@ -12,6 +18,13 @@ export const fetchPersonTreeFx = createEffect(getPersonTree);
 export const fetchPersonDetailFx = createEffect(getPerson);
 
 export const addPersonFx = createEffect(postPerson);
+
+export const addPersonFromChildrenFx = createEffect(
+  async ({ childrenId, ...form }: IAddPersonFromChildren) => {
+    const newPerson = await postPerson({ ...form, parentId: null });
+    await patchPerson({ id: childrenId || 0, body: { parentId: newPerson.id } });
+  },
+);
 
 export const deletePersonFx = createEffect(deletePerson);
 

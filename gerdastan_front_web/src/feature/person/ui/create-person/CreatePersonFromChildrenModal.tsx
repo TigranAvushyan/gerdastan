@@ -1,15 +1,19 @@
 import { FC, useCallback } from 'react';
-import { addPersonForm, createPersonModal } from '@entity/person/model/createPerson.ts';
-import { Modal } from 'antd';
 import { useUnit } from 'effector-react';
 import { useForm } from 'effector-forms';
+import { Modal } from 'antd';
 import { withPreventDefault } from '@shared/helpers/withPreventDefault.ts';
 import { CreatePersonForm } from '@feature/person/ui/create-person/CreatePersonForm.tsx';
+import {
+  addPersonFromChildrenForm,
+  createPersonFromChildrenModal,
+} from '@entity/person/model/createPersonFromChildren.ts';
 
-export const CreatePersonModal: FC = () => {
-  const { $isOpen, close } = useUnit(createPersonModal);
+export const CreatePersonFromChildrenModal: FC = () => {
+  const { $isOpen, close } = useUnit(createPersonFromChildrenModal);
 
-  const { reset, fields, isValid, isDirty, submit } = useForm(addPersonForm);
+  const { reset, fields, isValid, isDirty, submit } = useForm(addPersonFromChildrenForm);
+
   const closeModal = useCallback(() => {
     reset();
     close();

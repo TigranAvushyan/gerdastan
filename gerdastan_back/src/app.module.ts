@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
-import { PersonModule } from './person/v1/person.module';
-import { PrismaModule } from './prisma/prisma.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { configService } from './config/config.service';
+import { PersonModule } from './person/v1/person.module';
 
 @Module({
   imports: [
     PersonModule,
-    PrismaModule,
     MulterModule.register({ dest: './uploads' }),
+    TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
   ],
   providers: [AppService],
 })

@@ -11,10 +11,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { PersonService } from './person.service';
-import { CreatePersonDto } from './dto/createPerson.dto';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { Prisma } from '@prisma/client';
+import { PersonEntity } from './person.entity';
 
 @Controller('/v1/person')
 export class PersonController {
@@ -22,7 +21,7 @@ export class PersonController {
 
   @Get('')
   async getPersons() {
-    return this.personService.persons({});
+    return this.personService.persons();
   }
 
   @Get('/tree')
@@ -31,17 +30,17 @@ export class PersonController {
   }
 
   @Get(':id')
-  async getPerson(@Param('id', ParseIntPipe) id: number) {
+  async getPerson(@Param('id', ParseIntPipe) id: string) {
     return this.personService.person(id);
   }
 
   @Delete(':id')
-  async deletePerson(@Param('id', ParseIntPipe) id: number) {
+  async deletePerson(@Param('id', ParseIntPipe) id: string) {
     return this.personService.deletePerson(id);
   }
 
   @Post('')
-  async createPerson(@Body() personData: CreatePersonDto) {
+  async createPerson(@Body() personData: PersonEntity) {
     return await this.personService.createPerson(personData);
   }
 
@@ -56,16 +55,35 @@ export class PersonController {
       }),
     }),
   )
-  uploadFile(
+  uploadImage(
     @UploadedFiles() files: Array<Express.Multer.File>,
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: string,
   ) {
-    const fileNames = files.map((i) => i.filename);
-    return this.personService.addImage(id, fileNames);
+    const file = files.map((i) => i.filename);
+    return this.personService.addImage(id, file);
+  }
+
+  @Post(':id/video')
+  @UseInterceptors(
+    AnyFilesInterceptor({
+      storage: diskStorage({
+        destination: './uploads',
+        filename(req, file, callback) {
+          callback(null, `${Date.now()}${Math.floor(Math.random() * 100)}-${file.originalname}`);
+        },
+      }),
+    }),
+  )
+  uploadVideo(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Param('id', ParseIntPipe) id: string,
+  ) {
+    const file = files.map((i) => i.filename);
+    return this.personService.addVideo(id, file);
   }
 
   @Patch(':id')
-  updatePerson(@Param('id', ParseIntPipe) id: number, @Body() person: Prisma.PersonUpdateInput) {
+  updatePerson(@Param('id', ParseIntPipe) id: string, @Body() person: PersonEntity) {
     return this.personService.updatePerson(id, person);
   }
 }
